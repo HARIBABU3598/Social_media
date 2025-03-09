@@ -6,4 +6,4 @@ installation
 5.i bcrypt-//encryting password into database
 6.cors-//if frontend and backend in diff domain it used to integrate together
 7.i cookie-parse
-8.cloudinary-//to store images
+8.cloudinary-//to store images.
