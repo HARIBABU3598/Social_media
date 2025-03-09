@@ -1,0 +1,9 @@
+installation
+1.npm init -y
+2.npm i express mongoose dotenv
+3.npm i -D nodemon-//auto refresh server
+4.npm i jsonwebtoken-//used for authentication(it creates string with secret keys)
+5.i bcrypt-//encryting password into database
+6.cors-//if frontend and backend in diff domain it used to integrate together
+7.i cookie-parse
+8.cloudinary-//to store images
