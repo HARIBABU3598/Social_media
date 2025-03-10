@@ -17,7 +17,7 @@ const postSchema=mongoose.Schema({
             ref:"User"
         }
     ],
-    comment:[
+    comments:[
         {
             text:{
                 type:String,
