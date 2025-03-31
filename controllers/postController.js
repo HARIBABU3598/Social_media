@@ -83,6 +83,7 @@ export const createComment=async(req,res)=>{
         res.status(500).json({error:"internal server error"})
     }
 }
+
 export const likeUnlikePost=async(req,res)=>{
     try {
         const userId=req.user._id;
@@ -121,7 +122,14 @@ export const likeUnlikePost=async(req,res)=>{
 
 export const getAllPosts=async(req,res)=>{
     try {
-        const posts=await Post.find().sort({createdAt:-1})
+        const posts=await Post.find().sort({createdAt:-1}).populate({
+            path:"user",
+            select:"-password"
+            })
+            .populate({
+                path:"comments.user",
+                select:["-password ","email"]
+            })
         if(posts.length==0){
             return res.status(200).json([])
         }
@@ -131,3 +139,53 @@ export const getAllPosts=async(req,res)=>{
         res.status(500).json({error:"internal server error"})
     }
 }
+
+export const getFollowingPosts=async(req,res)=>{
+    try {
+        const userId=req.user._id;
+        const user=await User.findById({_id:userId})
+        if(!user){
+            return res.status(404).json({error:"User not found"})
+        }
+        const following=user.following;
+        const feedPosts=await Post.find({user:{$in:following}})
+        .sort({createdAt:-1})
+        .populate({
+            path:"user",
+            select:"-password"
+        })
+        .populate({
+            path:"comments.user",
+            select:"-password"
+        })
+        res.status(200).json(feedPosts);
+    } catch (error) {
+        console.log(`error in getFollowingPoats controller :${error}`);
+        res.status(500).json({error:"internal server error"})
+    }
+}
+
+export const getUserPosts = async (req, res) => {
+    try {
+        const {userName} = req.params;
+        const user = await User.findOne({userName})
+        if (!user) {
+            return res.status(404).json({ error : "User not found"});
+        }
+        const posts = await Post.find({ user: user._id })
+            .sort({ createdAt: -1 })
+            .populate({
+                path: "user",
+                select: "-password"
+            })
+            .populate({
+                path: "comments.user",
+                select: "-password"
+            });
+
+        res.status(200).json(posts);
+    } catch (error) {
+        console.log(`Error in getUserPosts controller: ${error}`);
+        res.status(500).json({ error: "Internal server error" });
+    }
+};

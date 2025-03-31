@@ -24,7 +24,7 @@ export const followUnFollowUser=async(req,res)=>{
         const userToModify=await User.findOne({_id:id});
         const currentUser=await User.findOne({_id:req.user._id})
         if(id===req.user._id){
-            return res.status(400).json({error:"you can't follow/unfollow ypurself"});
+            return res.status(400).json({error:"you can't follow/unfollow yourself"});
         }
         if(!userToModify||!currentUser){
             return res.status(400).json({error:"user not found"});
